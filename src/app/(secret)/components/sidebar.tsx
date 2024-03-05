@@ -13,14 +13,15 @@ import { Progress } from '@/components/ui/progress';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { TrashBox } from './trash-box';
 import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+import { Navbar } from './navbar';
 
 export const Sidebar = () => {
     const isMobile = useMediaQuery('(max-width: 770px)')
     const router = useRouter()
     const createDocument = useMutation(api.document.createDocument)
+    const params = useParams();
 
-    console.log(isMobile);
     const sidebarRef = useRef<ElementRef<'div'>>(null);
     const navbarRef = useRef<ElementRef<'div'>>(null);
     const isResizing = useRef(false);
@@ -90,14 +91,14 @@ export const Sidebar = () => {
 
     const onCreateDocument = () => {
         const promise = createDocument({
-            title:'Untitiled'
-          }).then((docId) => router.push(`documents/${docId}`))
-      
-          toast.promise(promise, {
+            title: 'Untitiled'
+        }).then((docId) => router.push(`documents/${docId}`))
+
+        toast.promise(promise, {
             loading: 'Creating a new document...',
             success: 'Created a new document',
             error: 'Failed to create a new document'
-          })
+        })
     }
 
     const arr = [1];
@@ -148,7 +149,7 @@ export const Sidebar = () => {
                             className='p-0 w-72'
                             side={isMobile ? 'bottom' : 'right'}
                         >
-                            <TrashBox/>
+                            <TrashBox />
                         </PopoverContent>
                     </Popover>
                 </div>
@@ -185,12 +186,21 @@ export const Sidebar = () => {
                 }
                 ref={navbarRef}
             >
-                <nav className='bg-transparent px-3 py-2 w-full' >
-                    {isCollapsed && (
-                        <MenuIcon className='w-6 h-6 text-muted-foreground' role="button" onClick={reset} />
-                    )}
+                {!!params.documentId ? (
+                    <Navbar isCollapsed={isCollapsed} reset={reset}/>
+                ) : (
+                    <nav className='bg-transparent px-3 py-2 w-full' >
+                        {isCollapsed && (
+                            <MenuIcon
+                                className='w-6 h-6 text-muted-foreground'
+                                role="button"
+                                onClick={reset}
+                            />
+                        )}
 
-                </nav>
+                    </nav>
+                )}
+
             </div>
         </>
     )
