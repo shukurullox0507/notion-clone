@@ -12,9 +12,12 @@ import { UserBox } from './user-box';
 import { Progress } from '@/components/ui/progress';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { TrashBox } from './trash-box';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 export const Sidebar = () => {
     const isMobile = useMediaQuery('(max-width: 770px)')
+    const router = useRouter()
     const createDocument = useMutation(api.document.createDocument)
 
     console.log(isMobile);
@@ -86,9 +89,15 @@ export const Sidebar = () => {
     }
 
     const onCreateDocument = () => {
-        createDocument({
-            title: "Untitled",
-        })
+        const promise = createDocument({
+            title:'Untitiled'
+          }).then((docId) => router.push(`documents/${docId}`))
+      
+          toast.promise(promise, {
+            loading: 'Creating a new document...',
+            success: 'Created a new document',
+            error: 'Failed to create a new document'
+          })
     }
 
     const arr = [1];
