@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useMutation } from 'convex/react'
 import { api } from '../../../../convex/_generated/api'
+import { Skeleton } from '@/components/ui/skeleton'
 
 interface TitleProps {
     document: Doc<"documents">
@@ -72,3 +73,7 @@ export const Title = ({ document }: TitleProps) => {
         </div>
     )
 }
+
+Title.Skeleton = function TitleSkeleton() {
+    return <Skeleton className="h-9 w-20 rounded-md" />;
+  };
